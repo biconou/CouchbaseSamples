@@ -1,14 +1,10 @@
 package com.github.biconou.couchbase.samples;
 
-import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParser;
-import com.couchbase.client.deps.com.fasterxml.jackson.core.type.TypeReference;
-import com.couchbase.client.deps.com.fasterxml.jackson.databind.ObjectMapper;
-import com.couchbase.client.deps.com.fasterxml.jackson.databind.ObjectReader;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonArray;
-import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.couchbase.client.java.query.N1qlQuery;
@@ -17,10 +13,7 @@ import com.couchbase.client.java.query.N1qlQueryRow;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,11 +26,20 @@ public class SimpleN1QLTest {
     @BeforeClass
     public static void setup() {
         CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder().connectTimeout(10000).build();
+        // TODO citer deux noeuds ici. Quel port ?
         cluster = CouchbaseCluster.create(env,"localhost");
         bucket = cluster.openBucket("travel-sample");
 
         // Create a N1QL Primary Index (but ignore if it exists)
         bucket.bucketManager().createN1qlPrimaryIndex(true, false);
+
+    }
+
+    @Test
+    public void getDocumentById() {
+        JsonDocument foundDocument = bucket.get("airline_10");
+
+        System.out.println(foundDocument);
 
     }
 
