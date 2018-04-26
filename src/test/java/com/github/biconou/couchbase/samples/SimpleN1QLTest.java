@@ -28,6 +28,7 @@ public class SimpleN1QLTest {
         CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder().connectTimeout(10000).build();
         // TODO citer deux noeuds ici. Quel port ?
         cluster = CouchbaseCluster.create(env,"localhost");
+        cluster.authenticate("Administrator", "password");
         bucket = cluster.openBucket("travel-sample");
 
         // Create a N1QL Primary Index (but ignore if it exists)
@@ -38,9 +39,7 @@ public class SimpleN1QLTest {
     @Test
     public void getDocumentById() {
         JsonDocument foundDocument = bucket.get("airline_10");
-
         System.out.println(foundDocument);
-
     }
 
     @Test
